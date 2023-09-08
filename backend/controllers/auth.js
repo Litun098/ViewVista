@@ -55,7 +55,6 @@ export const signin = async (req, res, next) => {
         userData,
       });
 
-    res.status(200).json({ message: "Successfullu logged in." });
   } catch (error) {
     // todo
     console.log(error);
