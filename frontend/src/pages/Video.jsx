@@ -11,8 +11,9 @@ import ShareIcon from "@mui/icons-material/Share";
 import React from "react";
 
 import styled from "styled-components";
-import Comments from "../Components/Comments";
+
 import Card from "../Components/Card";
+import Comments from "../Components/Comments";
 
 const Container = styled.div`
   display: flex;
@@ -179,3 +180,6 @@ function Video() {
 }
 
 export default Video;
+
+
+// 2:29

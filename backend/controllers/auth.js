@@ -43,17 +43,14 @@ export const signin = async (req, res, next) => {
     }
 
     const token = JWT.sign({ id: user._id }, process.env.JWT);
-    const {password,...userData} = user._doc;
+    const { password, ...userData } = user._doc;
 
     res
       .cookie("access_token", token, {
         httpOnly: true,
       })
       .status(200)
-      .json({
-        message: "Signed in successfully.",
-        userData,
-      });
+      .json(userData);
 
   } catch (error) {
     // todo
@@ -61,3 +58,33 @@ export const signin = async (req, res, next) => {
     next(error);
   }
 };
+
+export const googleAuth = async (req, res, next) => {
+  try {
+    const user =await User.findOne({ email: req.body.email });
+    if (user) {
+      const token = JWT.sign({ id: user._id }, process.env.JWT)
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .status(200)
+        .json(user._doc);
+    } else {
+      const newUser = new User({
+        ...req.body,
+        fromGoogle: true
+      })
+      const savedUser = await newUser.save();
+      const token = JWT.sign({ id: savedUser._id }, process.env.JWT)
+      res
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json(savedUser._doc);
+    }
+  } catch (error) {
+    next(error)
+  }
+}

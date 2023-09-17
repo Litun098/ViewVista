@@ -1,6 +1,3 @@
-import React from "react";
-import styled from "styled-components";
-import Utube from "../img/youtube-logo.png";
 import HomeIcon from "@mui/icons-material/Home";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
@@ -17,7 +14,16 @@ import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import SettingsBrightnessOutlinedIcon from "@mui/icons-material/SettingsBrightnessOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+
+import React from "react";
+
+import styled from "styled-components";
+
 import { Link } from "react-router-dom";
+
+import { useSelector } from 'react-redux';
+
+import Utube from "../img/youtube-logo.png";
 import theme from "../utils/Theme";
 
 const Container = styled.div`
@@ -83,6 +89,10 @@ const Title = styled.h2`
 `;
 
 const Menu = ({ darkMode, setDarkMode }) => {
+
+  const { currentUser } = useSelector((state) => state.user);
+
+
   return (
     <Container>
       <Wrapper>
@@ -92,17 +102,23 @@ const Menu = ({ darkMode, setDarkMode }) => {
             UTube
           </Logo>
         </Link>
-        <Item>
-          <HomeIcon />
-          Home
-        </Item>
-        <Item>
-          <ExploreOutlinedIcon />
-          Explore
-        </Item>
-        <Item>
-          <SubscriptionsOutlinedIcon /> Subscriptions
-        </Item>
+        <Link to='/' style={{ textDecoration: 'none', color: "inherit" }}>
+          <Item>
+            <HomeIcon />
+            Home
+          </Item>
+        </Link>
+        <Link to='trends' style={{ textDecoration: 'none', color: "inherit" }}>
+          <Item>
+            <ExploreOutlinedIcon />
+            Explore
+          </Item>
+        </Link>
+        <Link to='subscriptions' style={{ textDecoration: 'none', color: "inherit" }}>
+          <Item>
+            <SubscriptionsOutlinedIcon /> Subscriptions
+          </Item>
+        </Link>
         <Hr />
         <Item>
           <VideoLibraryOutlinedIcon /> Library
@@ -112,15 +128,19 @@ const Menu = ({ darkMode, setDarkMode }) => {
           History
         </Item>
         <Hr />
-        <Login>
-          Sign in to like video, comment, and subscribe
-          <Link to='signin' style={{textDecoration:'none'}}>
-            <Button>
-              <AccountCircleOutlinedIcon /> SIGN IN
-            </Button>
-          </Link>
-        </Login>
-        <Hr />
+        {!currentUser &&
+          <>
+            <Login>
+              Sign in to like video, comment, and subscribe
+              <Link to='signin' style={{ textDecoration: 'none' }}>
+                <Button>
+                  <AccountCircleOutlinedIcon /> SIGN IN
+                </Button>
+              </Link>
+            </Login>
+            <Hr />
+          </>
+        }
         <Title>Best of UTUBE</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
@@ -167,3 +187,4 @@ const Menu = ({ darkMode, setDarkMode }) => {
 };
 
 export default Menu;
+
