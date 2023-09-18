@@ -8,12 +8,21 @@ import PlaylistAddOutlinedIcon from "@mui/icons-material/PlaylistAddOutlined";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ShareIcon from "@mui/icons-material/Share";
 
-import React from "react";
+import { current } from "@reduxjs/toolkit";
+
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
-import Card from "../Components/Card";
+import { useLocation } from "react-router-dom";
+
+import axios from "axios";
+
+import { format } from "timeago.js";
+
 import Comments from "../Components/Comments";
+import { fetchSuccess } from "../redux/videoSlice";
+import { useDispatch, useSelector } from 'react-redux'
 
 const Container = styled.div`
   display: flex;
@@ -103,6 +112,30 @@ const Subscribe = styled.button`
 `;
 
 function Video() {
+
+  const { currentUser } = useSelector((state) => state.user)
+  const { currentVideo } = useSelector((state) => state.video)
+  const dispatch = useDispatch()
+  const path = useLocation().pathname.split('/')[2]
+
+
+  const [channel, setChannel] = useState({})
+
+  useEffect(() => {
+    const fetchDate = async () => {
+      try {
+        const videoRes = await axios.get(`/videos/find/${path}`)
+        const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`)
+        setChannel(channelRes.data)
+        dispatch(fetchSuccess(videoRes.data))
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchDate()
+  }, [path, dispatch]);
+
+  
   return (
     <Container>
       <Content>
@@ -117,15 +150,15 @@ function Video() {
             allowfullscreen
           ></iframe>
         </VideoWrapper>
-        <Title>Test Video</Title>
+        <Title>{currentVideo.title}</Title>
         <Detail>
-          <Info>7,987,987 views * Jun 22, 2022</Info>
+          <Info>{currentVideo.views} views * {format(currentVideo.createdAt)}</Info>
           <Buttons>
             <Button>
-              <ThumbUpIcon /> 123
+              <ThumbUpIcon /> {currentVideo.likes.length}
             </Button>
             <Button>
-              <ThumbDownIcon /> Dislike
+              <ThumbDownIcon /> {currentVideo.dislikes.length}
             </Button>
             <Button>
               <ShareIcon /> Share
@@ -140,18 +173,10 @@ function Video() {
           <ChannelInfo>
             <Image src="" />
             <ChannelDetail>
-              <ChannelName>I'm Developer</ChannelName>
-              <ChannelCounter>1m subscribers</ChannelCounter>
+              <ChannelName>{channel.name}</ChannelName>
+              <ChannelCounter>{channel.subscribers}</ChannelCounter>
               <Description>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus
-                voluptatum officiis aliquam praesentium repudiandae, vero
-                ducimus rerum autem non nisi! Ad corrupti ullam vel voluptas,
-                nesciunt vitae culpa saepe nostrum hic quisquam cumque, dolore
-                reiciendis. Excepturi sequi illum sunt, ratione aspernatur
-                quaerat, quibusdam corporis doloremque cum sed fugiat eum!
-                Dolore velit temporibus, quaerat in laudantium mollitia eligendi
-                eius aliquid, possimus iste numquam officiis vero sapiente nam!
-                Perferendis aut ipsa sit.
+                {currentVideo.desc}
               </Description>
             </ChannelDetail>
           </ChannelInfo>
@@ -160,7 +185,7 @@ function Video() {
         <Hr />
         <Comments />
       </Content>
-      <Recommendation>
+      {/* <Recommendation>
         <Card type="sm" />
         <Card type="sm" />
         <Card type="sm" />
@@ -174,7 +199,7 @@ function Video() {
         <Card type="sm" />
         <Card type="sm" />
         <Card type="sm" />
-      </Recommendation>
+      </Recommendation> */}
     </Container>
   );
 }
