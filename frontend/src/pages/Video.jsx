@@ -124,7 +124,9 @@ function Video() {
   useEffect(() => {
     const fetchDate = async () => {
       try {
+        console.log(path)
         const videoRes = await axios.get(`/videos/find/${path}`)
+        console.log(videoRes)
         const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`)
         setChannel(channelRes.data)
         dispatch(fetchSuccess(videoRes.data))
@@ -135,7 +137,7 @@ function Video() {
     fetchDate()
   }, [path, dispatch]);
 
-  
+  console.log(currentVideo.title)
   return (
     <Container>
       <Content>
@@ -155,10 +157,10 @@ function Video() {
           <Info>{currentVideo.views} views * {format(currentVideo.createdAt)}</Info>
           <Buttons>
             <Button>
-              <ThumbUpIcon /> {currentVideo.likes.length}
+              <ThumbUpIcon /> {currentVideo.likes}
             </Button>
             <Button>
-              <ThumbDownIcon /> {currentVideo.dislikes.length}
+              <ThumbDownIcon /> {currentVideo.dislikes}
             </Button>
             <Button>
               <ShareIcon /> Share
@@ -206,5 +208,3 @@ function Video() {
 
 export default Video;
 
-
-// 2:29
