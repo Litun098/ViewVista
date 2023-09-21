@@ -28,7 +28,7 @@ router.get("/find/:id",getUser);
 router.put("/sub/:id", verifyToken,subscribe);
 
 // Unsubscribe a user
-router.put("/sub/:id",verifyToken, unsubscribe);
+router.put("/unsub/:id",verifyToken, unsubscribe);
 
 // like a video
 router.put("/like/:videoId",verifyToken, like);

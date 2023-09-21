@@ -1,5 +1,7 @@
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import DownloadIcon from "@mui/icons-material/Download";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FlagIcon from "@mui/icons-material/Flag";
@@ -21,9 +23,9 @@ import axios from "axios";
 import { format } from "timeago.js";
 
 import Comments from "../Components/Comments";
-import { fetchSuccess } from "../redux/videoSlice";
-import { useDispatch, useSelector } from 'react-redux'
-
+import { subscription } from "../redux/userSlice";
+import { fetchSuccess, like, dislike } from "../redux/videoSlice";
+import { useSelector, useDispatch } from 'react-redux'
 const Container = styled.div`
   display: flex;
   gap: 24px;
@@ -124,9 +126,7 @@ function Video() {
   useEffect(() => {
     const fetchDate = async () => {
       try {
-        console.log(path)
         const videoRes = await axios.get(`/videos/find/${path}`)
-        console.log(videoRes)
         const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`)
         setChannel(channelRes.data)
         dispatch(fetchSuccess(videoRes.data))
@@ -137,7 +137,21 @@ function Video() {
     fetchDate()
   }, [path, dispatch]);
 
-  console.log(currentVideo.title)
+  async function handleLike() {
+    await axios.put(`/users/like/${currentVideo._id}`)
+    dispatch(like(currentUser._id))
+  }
+  async function handleDislike() {
+    await axios.put(`/users/dislike/${currentVideo._id}`)
+    dispatch(dislike(currentUser._id))
+
+  }
+  async function handleSubscribe() {
+    currentUser.subscribedUsers.includes(channel._id) ?
+      await axios.put(`/users/unsub/${channel._id}`) :
+      await axios.put(`/users/sub/${channel._id}`);
+    dispatch(subscription(channel._id))
+  }
   return (
     <Container>
       <Content>
@@ -156,11 +170,11 @@ function Video() {
         <Detail>
           <Info>{currentVideo.views} views * {format(currentVideo.createdAt)}</Info>
           <Buttons>
-            <Button>
-              <ThumbUpIcon /> {currentVideo.likes}
+            <Button onClick={handleLike}>
+              {currentVideo.likes?.includes(currentUser._id) ? (<ThumbUpIcon />) : (<ThumbUpOffAltIcon />)}{" "} {currentVideo.likes?.length}
             </Button>
-            <Button>
-              <ThumbDownIcon /> {currentVideo.dislikes}
+            <Button onClick={handleDislike}>
+              {currentVideo.dislikes?.includes(currentUser._id) ? (<ThumbDownIcon />) : (<ThumbDownOffAltIcon />)}{" "} dislike
             </Button>
             <Button>
               <ShareIcon /> Share
@@ -173,16 +187,16 @@ function Video() {
         <Hr />
         <Channel>
           <ChannelInfo>
-            <Image src="" />
+            <Image src={channel.img} />
             <ChannelDetail>
               <ChannelName>{channel.name}</ChannelName>
-              <ChannelCounter>{channel.subscribers}</ChannelCounter>
+              <ChannelCounter>{channel.subscribers} subscribers</ChannelCounter>
               <Description>
                 {currentVideo.desc}
               </Description>
             </ChannelDetail>
           </ChannelInfo>
-          <Subscribe>SUBSCRIBE</Subscribe>
+          <Subscribe onClick={handleSubscribe}>{currentUser.subscribedUsers?.includes(channel._id) ? "SUBSCRIBED" : "SUBSCRIBE"}</Subscribe>
         </Channel>
         <Hr />
         <Comments />
