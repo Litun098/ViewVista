@@ -26,6 +26,7 @@ import Comments from "../Components/Comments";
 import { subscription } from "../redux/userSlice";
 import { fetchSuccess, like, dislike } from "../redux/videoSlice";
 import { useSelector, useDispatch } from 'react-redux'
+import Recommendation from "../Components/Recommendation";
 const Container = styled.div`
   display: flex;
   gap: 24px;
@@ -65,10 +66,6 @@ const Button = styled.div`
 const Hr = styled.hr`
   margin: 15px 0px;
   border: 0.5px solid ${({ theme }) => theme.soft};
-`;
-
-const Recommendation = styled.div`
-  flex: 2;
 `;
 
 const Channel = styled.div`
@@ -112,6 +109,11 @@ const Subscribe = styled.button`
   padding: 10px 20px;
   cursor: pointer;
 `;
+const VideoFrame = styled.video`
+  max-height: 720px;
+  width: 100%;
+  object-fit: cover;
+`
 
 function Video() {
 
@@ -156,15 +158,7 @@ function Video() {
     <Container>
       <Content>
         <VideoWrapper>
-          <iframe
-            width="100%"
-            height="450"
-            src="https://www.youtube-nocookie.com/embed/IEfBBYmxtIo"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
+          <VideoFrame src={currentVideo.videoUrl} controls/>
         </VideoWrapper>
         <Title>{currentVideo.title}</Title>
         <Detail>
@@ -199,23 +193,9 @@ function Video() {
           <Subscribe onClick={handleSubscribe}>{currentUser.subscribedUsers?.includes(channel._id) ? "SUBSCRIBED" : "SUBSCRIBE"}</Subscribe>
         </Channel>
         <Hr />
-        <Comments />
+        <Comments videoId ={currentVideo._id} />
       </Content>
-      {/* <Recommendation>
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-      </Recommendation> */}
+      <Recommendation tags={currentVideo.tags}/>
     </Container>
   );
 }
