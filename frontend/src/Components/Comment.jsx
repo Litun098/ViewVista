@@ -4,8 +4,6 @@ import axios from 'axios';
 
 import { format } from 'timeago.js';
 
-import avatar from "../img/Avatar.jpg";
-
 const Container = styled.div`
   display: flex;
   gap: 10px;
