@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 
@@ -74,7 +74,9 @@ const Avatar = styled.img`
   /* background-color: #999; */
 `
 const Navbar = () => {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
 
   const currentUser = useSelector(state => state.user.currentUser)
   return (
@@ -82,8 +84,8 @@ const Navbar = () => {
     <Container>
     <Wrapper>
         <Search>
-          <Input placeholder="Search" />
-          <SearchOutlinedIcon />
+          <Input placeholder="Search" onChange={e=>setQ(e.target.value)}/>
+          <SearchOutlinedIcon onClick={()=>navigate(`/search?q=${q}`)}/>
         </Search>
         {currentUser ?
           <User>

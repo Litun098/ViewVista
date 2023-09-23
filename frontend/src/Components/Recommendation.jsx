@@ -18,7 +18,6 @@ const Recommendation = ({tags}) => {
         fetchVideos();
     },[tags]);
 
-    console.log(videos)
   return (
     <Container>
       {videos.map(video=>(
