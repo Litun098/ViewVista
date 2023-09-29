@@ -4,11 +4,14 @@ import React, { useState } from "react";
 
 import { useDispatch } from "react-redux";
 
+import { useNavigate } from "react-router-dom";
+
 import styled from "styled-components";
 
 import { loginFailure, loginStart, loginSuccess } from "../redux/userSlice";
 import { auth, provider } from '../firebase'
 import { signInWithPopup } from 'firebase/auth'
+
 
 const Container = styled.div`
   display: flex;
@@ -39,6 +42,7 @@ const SubTitle = styled.h2`
 `;
 const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.soft};
+  color: 1px solid ${({ theme }) => theme.textSoft};
   width: 100%;
   border-radius: 3px;
   padding: 10px;
@@ -72,6 +76,7 @@ const Signin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -79,6 +84,7 @@ const Signin = () => {
     try {
       const res = await axios.post('/auth/signin', { name, password });
       dispatch(loginSuccess(res.data))
+      if (res.status === 200) navigate('/')
     } catch (error) {
       dispatch(loginFailure())
     }
