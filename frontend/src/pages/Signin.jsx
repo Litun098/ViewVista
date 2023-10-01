@@ -99,6 +99,7 @@ const Signin = () => {
         img: result.user.photoURL,
       }).then((res) => {
         dispatch(loginSuccess(res.data))
+        if (res.status === 200) navigate('/')
       })
     })
       .catch(error => {
