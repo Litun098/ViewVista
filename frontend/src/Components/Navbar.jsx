@@ -1,16 +1,21 @@
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
 import React, { useState } from "react";
 
 import styled from "styled-components";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { logout } from "../redux/userSlice";
+import { fetchFailure } from "../redux/videoSlice";
 
 import Upload from "./Upload";
+import cookie from 'react-cookies'
 
 const Container = styled.div`
   position: sticky;
@@ -79,28 +84,48 @@ const Navbar = () => {
   const [q, setQ] = useState("");
 
   const currentUser = useSelector(state => state.user.currentUser)
+  const { currentVideo } = useSelector((state) => state.video)
+
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    try {
+
+      // Remove the 'access_token' cookie
+      cookie.remove('access_token', { path: '/' });
+
+      // Dispatch the logout action to clear the user state
+      dispatch(logout());
+
+      // Redirect to the home page or any other desired route
+      navigate('/');
+
+    } catch (err) {
+      alert("Something went wrong.");
+    }
+  }
+
   return (
     <>
-    <Container>
-    <Wrapper>
-        <Search>
-          <Input placeholder="Search" onChange={e=>setQ(e.target.value)}/>
-          <SearchOutlinedIcon onClick={()=>navigate(`/search?q=${q}`)}/>
-        </Search>
-        {currentUser ?
-          <User>
-            <VideoCallOutlinedIcon onClick={() => setOpen(true)} />
-            <Avatar src={currentUser.img} />
-            {currentUser.name}
-          </User> : <Link to="signin" style={{ textDecoration: "none" }}>
-            <Button>
-              <AccountCircleOutlinedIcon />
-              SIGN IN
-            </Button>
-          </Link>}
-      </Wrapper>
-    </Container>
-    {open && <Upload setOpen={setOpen}/>}
+      <Container>
+        <Wrapper>
+          <Search>
+            <Input placeholder="Search" onChange={e => setQ(e.target.value)} />
+            <SearchOutlinedIcon onClick={() => navigate(`/search?q=${q}`)} />
+          </Search>
+          {currentUser ?
+            <User>
+              <VideoCallOutlinedIcon onClick={() => setOpen(true)} />
+              <Avatar src={currentUser.img} />
+              <LogoutOutlinedIcon onClick={handleLogout} />
+            </User> : <Link to="signin" style={{ textDecoration: "none" }}>
+              <Button>
+                <AccountCircleOutlinedIcon />
+                SIGN IN
+              </Button>
+            </Link>}
+        </Wrapper>
+      </Container>
+      {open && <Upload setOpen={setOpen} />}
     </>
   );
 };
