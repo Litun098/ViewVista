@@ -22,11 +22,12 @@ import axios from "axios";
 
 import { format } from "timeago.js";
 
+import { useDispatch,useSelector } from "react-redux";
+
 import Comments from "../Components/Comments";
+import Recommendation from "../Components/Recommendation";
 import { subscription } from "../redux/userSlice";
 import { fetchSuccess, like, dislike } from "../redux/videoSlice";
-import { useSelector, useDispatch } from 'react-redux'
-import Recommendation from "../Components/Recommendation";
 const Container = styled.div`
   display: flex;
   gap: 24px;
@@ -141,11 +142,11 @@ function Video() {
 
   async function handleLike() {
     await axios.put(`/users/like/${currentVideo._id}`)
-    dispatch(like(currentUser._id))
+    dispatch(like(currentUser?._id))
   }
   async function handleDislike() {
     await axios.put(`/users/dislike/${currentVideo._id}`)
-    dispatch(dislike(currentUser._id))
+    dispatch(dislike(currentUser?._id))
 
   }
   async function handleSubscribe() {
@@ -165,10 +166,10 @@ function Video() {
           <Info>{currentVideo.views} views * {format(currentVideo.createdAt)}</Info>
           <Buttons>
             <Button onClick={handleLike}>
-              {currentVideo.likes?.includes(currentUser._id) ? (<ThumbUpIcon />) : (<ThumbUpOffAltIcon />)}{" "} {currentVideo.likes?.length}
+              {currentVideo.likes?.includes(currentUser?._id) ? (<ThumbUpIcon />) : (<ThumbUpOffAltIcon />)}{" "} {currentVideo.likes?.length}
             </Button>
             <Button onClick={handleDislike}>
-              {currentVideo.dislikes?.includes(currentUser._id) ? (<ThumbDownIcon />) : (<ThumbDownOffAltIcon />)}{" "} dislike
+              {currentVideo.dislikes?.includes(currentUser?._id) ? (<ThumbDownIcon />) : (<ThumbDownOffAltIcon />)}{" "} dislike
             </Button>
             <Button>
               <ShareIcon /> Share
@@ -190,7 +191,7 @@ function Video() {
               </Description>
             </ChannelDetail>
           </ChannelInfo>
-          <Subscribe onClick={handleSubscribe}>{currentUser.subscribedUsers?.includes(channel._id) ? "SUBSCRIBED" : "SUBSCRIBE"}</Subscribe>
+          <Subscribe onClick={handleSubscribe}>{currentUser?.subscribedUsers?.includes(channel._id) ? "SUBSCRIBED" : "SUBSCRIBE"}</Subscribe>
         </Channel>
         <Hr />
         <Comments videoId ={currentVideo._id} />

@@ -89,16 +89,10 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const handleLogout = () => {
     try {
-
-      // Remove the 'access_token' cookie
-      cookie.remove('access_token', { path: '/' });
-
       // Dispatch the logout action to clear the user state
       dispatch(logout());
-
       // Redirect to the home page or any other desired route
       navigate('/');
-
     } catch (err) {
       alert("Something went wrong.");
     }
