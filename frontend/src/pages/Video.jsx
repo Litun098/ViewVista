@@ -143,11 +143,17 @@ function Video() {
   async function handleLike() {
     await axios.put(`/users/like/${currentVideo._id}`)
     dispatch(like(currentUser?._id))
+    if(!currentUser){
+      alert("Please SignIn.")
+    }
   }
   async function handleDislike() {
     await axios.put(`/users/dislike/${currentVideo._id}`)
     dispatch(dislike(currentUser?._id))
-
+    
+    if(!currentUser){
+      alert("Please SignIn.")
+    }
   }
   async function handleSubscribe() {
     currentUser.subscribedUsers.includes(channel._id) ?
