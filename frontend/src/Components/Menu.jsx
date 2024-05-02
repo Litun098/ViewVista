@@ -21,7 +21,7 @@ import styled from "styled-components";
 
 import { Link } from "react-router-dom";
 
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 
 import Utube from "../img/youtube-logo.png";
 import theme from "../utils/Theme";
@@ -35,6 +35,22 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.bgLighter};
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius:50px ;
+    background-color: gray;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.bgLighter};
+    &:hover {
+      background: gray;
+    }
+  }
 `;
 const Wrapper = styled.div`
   padding: 18px 26px;
@@ -89,9 +105,7 @@ const Title = styled.h2`
 `;
 
 const Menu = ({ darkMode, setDarkMode }) => {
-
   const { currentUser } = useSelector((state) => state.user);
-
 
   return (
     <Container>
@@ -102,19 +116,22 @@ const Menu = ({ darkMode, setDarkMode }) => {
             UTube
           </Logo>
         </Link>
-        <Link to='/' style={{ textDecoration: 'none', color: "inherit" }}>
+        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
           <Item>
             <HomeIcon />
             Home
           </Item>
         </Link>
-        <Link to='trends' style={{ textDecoration: 'none', color: "inherit" }}>
+        <Link to="trends" style={{ textDecoration: "none", color: "inherit" }}>
           <Item>
             <ExploreOutlinedIcon />
             Explore
           </Item>
         </Link>
-        <Link to='subscriptions' style={{ textDecoration: 'none', color: "inherit" }}>
+        <Link
+          to="subscriptions"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           <Item>
             <SubscriptionsOutlinedIcon /> Subscriptions
           </Item>
@@ -128,11 +145,11 @@ const Menu = ({ darkMode, setDarkMode }) => {
           History
         </Item>
         <Hr />
-        {!currentUser &&
+        {!currentUser && (
           <>
             <Login>
               Sign in to like video, comment, and subscribe
-              <Link to='signin' style={{ textDecoration: 'none' }}>
+              <Link to="signin" style={{ textDecoration: "none" }}>
                 <Button>
                   <AccountCircleOutlinedIcon /> SIGN IN
                 </Button>
@@ -140,7 +157,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
             </Login>
             <Hr />
           </>
-        }
+        )}
         <Title>Best of UTUBE</Title>
         <Item>
           <LibraryMusicOutlinedIcon />
@@ -187,4 +204,3 @@ const Menu = ({ darkMode, setDarkMode }) => {
 };
 
 export default Menu;
-
