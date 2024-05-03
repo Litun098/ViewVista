@@ -24,7 +24,6 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import Utube from "../img/youtube-logo.png";
-import theme from "../utils/Theme";
 
 const Container = styled.div`
   flex: 1;
@@ -36,18 +35,21 @@ const Container = styled.div`
   top: 0;
   overflow-y: scroll;
   ::-webkit-scrollbar {
-    width: 5px;
+    width: 7px;
   }
   ::-webkit-scrollbar-track {
     background: ${({ theme }) => theme.bgLighter};
   }
   ::-webkit-scrollbar-thumb {
-    border-radius:50px ;
+    border-radius: 50px;
     background-color: gray;
   }
+
   ::-webkit-scrollbar-thumb {
     background: ${({ theme }) => theme.bgLighter};
-    &:hover {
+  }
+  &:hover {
+    ::-webkit-scrollbar-thumb {
       background: gray;
     }
   }
@@ -113,7 +115,8 @@ const Menu = ({ darkMode, setDarkMode }) => {
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
           <Logo>
             <Img src={Utube} />
-            UTube
+            <span style={{ color: "red" }}>View</span>
+            <span>Vista</span>
           </Logo>
         </Link>
         <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
