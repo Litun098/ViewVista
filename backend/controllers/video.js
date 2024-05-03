@@ -4,10 +4,8 @@ import Video from "../models/Video.js";
 
 export const addVideo = async (req, res, next) => {
   try {
-    console.log(req.body)
     const newVideo = new Video({ userId: req.user.id, ...req.body });
     const savedVideo = await newVideo.save();
-    console.log(savedVideo)
     res.status(200).json({ message: "Successfully added video.", savedVideo });
   } catch (err) {
     next(err);

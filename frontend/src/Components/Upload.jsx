@@ -66,23 +66,22 @@ const Label = styled.label`
 `
 
 const Upload = ({ setOpen }) => {
-
+  
   const [img, setImg] = useState(undefined)
   const [video, setVideo] = useState(undefined)
   const [imgPerc, setImgPerc] = useState(0)
   const [videoPerc, setVideoPerc] = useState(0)
   const [inputs, setInputs] = useState({})
   const [tags, setTags] = useState([])
-
+  
   const navigate = useNavigate();
 
   const handleTags = (e) => {
     setTags(e.target.value.split(' '))
   }
-  console.log(tags)
   
   const uploadFile = (file,urlType) => {
-    const storage = getStorage(app);
+    const storage = getStorage();
     const fileName = new Date().getTime()+file.name
     const storageRef = ref(storage,fileName );
     const uploadTask = uploadBytesResumable(storageRef,file);
@@ -103,7 +102,7 @@ const Upload = ({ setOpen }) => {
           break;
       }
     },(error)=>{
-
+      console.log(error);
     },()=>{
       // Upload complete successfully, now we can get the download URL
       getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
